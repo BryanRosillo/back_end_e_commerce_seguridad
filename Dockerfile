@@ -6,7 +6,7 @@ COPY src ./src
 ARG JWT_SECRETO
 ENV JWT_SECRETO=${JWT_SECRETO}
 
-RUN mvc clean package
+RUN mvn clean package
 
 FROM maven:3.8-openjdk-17-slim
 WORKDIR /app
