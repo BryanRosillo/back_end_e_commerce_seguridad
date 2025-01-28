@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.ecommerce.backend.seguridad.entidades.SolicitudLogin;
 import com.ecommerce.backend.seguridad.entidades.Usuario;
 import com.ecommerce.backend.seguridad.herramientas.HerramientaJWT;
@@ -46,16 +45,21 @@ public class ServicioSeguridad {
 			throw new Exception("Ya hay una cuenta con ese username.");
 		}
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+		usuario.setPreguntaSeguridad(passwordEncoder.encode(usuario.getPreguntaSeguridad()));
 		return this.repositorioUsuario.save(usuario);
 	}
 	
 	public void actualizarPassword(SolicitudLogin solicitud) throws Exception {
 		Optional<Usuario> posibleUsuario = this.repositorioUsuario.findByUsername(solicitud.getUsername());
 		if(!posibleUsuario.isPresent()) {
-			throw new Exception("Credenciales incorrectas.");
+			throw new Exception("El usuario mencionado no existe.");
 		}
 		Usuario usuarioActualizar = posibleUsuario.get();
-		usuarioActualizar.setPassword(passwordEncoder.encode(solicitud.getPassword()));
+		
+		if(!this.passwordEncoder.matches(solicitud.getPreguntaSeguridad(), usuarioActualizar.getPreguntaSeguridad())){
+			throw new Exception("Credenciales incorrectas");
+		}
+		usuarioActualizar.setPassword(this.passwordEncoder.encode(solicitud.getPassword()));
 		this.repositorioUsuario.save(usuarioActualizar);
 	}
 	

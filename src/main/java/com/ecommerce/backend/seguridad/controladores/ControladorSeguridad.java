@@ -62,7 +62,7 @@ public class ControladorSeguridad {
 	public ResponseEntity<String> cambiarPassword(@RequestBody SolicitudLogin solicitud){
 		try {
 			this.servicioSeguridad.actualizarPassword(solicitud);
-			return ResponseEntity.ok("Password actualizado");
+			return ResponseEntity.ok().build();
 		}catch(Exception e) {
 			return ResponseEntity.notFound().build();
 		}
