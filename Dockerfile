@@ -19,7 +19,6 @@ ARG MICROSERVICIO_REGISTRO_URI
 ENV MICROSERVICIO_REGISTRO_URI=${MICROSERVICIO_REGISTRO_URI}
 
 RUN mvn clean package
-
 FROM maven:3.8-openjdk-17-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
