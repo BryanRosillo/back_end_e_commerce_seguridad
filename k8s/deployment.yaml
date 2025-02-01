@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservicio-seguridad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservicio-seguridad
+  template:
+    metadata:
+      labels:
+        app: microservicio-seguridad
+    spec:
+      containers:
+      - name: microservicio-seguridad
+        image: bryanlrx/ec-seguridad:latest
+        ports:
+        - containerPort: 8081
+        env:
+        - name: DB_URL
+          valueFrom: 
+            secretKeyRef:
+              name: db-secret-url-usuarios 
+              key: db_url
+        - name: DB_USERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: db-secret-username
+              key: db_username
+        - name: DB_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: db-secret
+              key: db_password
+        - name: JWT_SECRETO
+          valueFrom: 
+            secretKeyRef:
+              name: jwt-secret
+              key: jwt_secreto
+        - name: MICROSERVICIO_REGISTRO_URI
+          value: 'http://microservicio-registro:8761/eureka/'
+
+
